@@ -62,9 +62,6 @@ Rule: the row and column of a placement belong to the chart of that placement
 
 ```actions
 createChart(title: String, owner: User, rowLabels: Labels, columnLabels: Labels) : returns (chart: Chart)
-  where title is blank
-  then
-    refuses BLANK_TITLE "A chart needs a title."
   where rowLabels contains the same label twice
   then
     refuses DUPLICATE_ROW "This chart already has a row with that label."
@@ -101,9 +98,6 @@ addColumn(chart: Chart, label: String, user: User) : returns (column: Column)
   where no membership has chart and member user
   then
     refuses NOT_MEMBER "You are not a member of this chart."
-  where label is blank
-  then
-    refuses INVALID_LABELS "A chart needs at least one row, and every row and column needs a label."
   where some column of chart has label
   then
     refuses DUPLICATE_COLUMN "This chart already has a column with that label."
@@ -162,7 +156,7 @@ checkRow(row: Row, chart: Chart) : returns (index: Number)
 checkItem(item: Item, chart: Chart) : returns (index: Number)
   where item is not placed in chart
   then
-    refuses NOT_IN_CHART "That cell is not in this chart."
+    refuses ITEM_NOT_FOUND "That post is not in this chart."
   where item is placed in chart
   then
     bind index to the index of the row item is placed in

@@ -52,7 +52,9 @@ title, its columns, and only the rows whose index is at most the member's progre
 For each visible row, it includes the posts placed there with their column, author,
 quote, citation, analysis, upvote count, and whether the member has upvoted them,
 and each post's comments, oldest first. Posts in rows the member has not reached are
-never sent to the front end.
+never sent to the front end. A post is included only when [its row is reached](view:ThreadTracker.RowReached) by
+the member, and each included post is shown as a [post card](former:ThreadTracker.PostCard)
+with its content, upvotes, and comments.
 
 Filtering by literary element works on the chart view in the front end, so it needs
 no endpoint of its own and never reveals unread rows.
@@ -88,6 +90,10 @@ same rules as creating: a quote needs a citation, and a post cannot be empty.
 The author of a post [deletes it](reaction:ThreadTracker.DeletePost) after Charting
 confirms membership and that the post is in the chart. Posting deletes the post with
 its comments, and Charting removes it from its cell.
+
+The author of a comment [deletes the comment](reaction:ThreadTracker.DeleteComment)
+after Charting confirms membership. A comment was never placed in the chart, so only
+Posting changes.
 
 ```endpoints
 ThreadTracker.CreatePost at /posts/create
