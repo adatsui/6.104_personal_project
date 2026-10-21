@@ -1,0 +1,64 @@
+:root {
+  --text: #1f2328;
+  --muted: #656d76;
+  --faint: #a4abb3;
+  --line: #d8dee4;
+  --soft: #f6f8fa;
+  --accent: #2f5f9e;
+  --accent-soft: #e8eff8;
+  --error: #b42318;
+  --error-soft: #fdecea;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: #fff; }
+main { max-width: 46rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+main.wide { max-width: 80rem; }
+h1 { font-size: 1.6rem; margin: 0 0 1rem; }
+h2 { font-size: 1.15rem; margin: 1.5rem 0 0.75rem; }
+a { color: var(--accent); }
+
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.6rem 1rem; border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 600; text-decoration: none; color: var(--text); }
+.who { color: var(--muted); }
+
+button {
+  font: inherit; cursor: pointer; border-radius: 6px; padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line); background: #fff; color: var(--text); white-space: nowrap;
+}
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.link { border: none; background: none; padding: 0; color: var(--accent); }
+button:disabled { opacity: 0.55; cursor: default; }
+
+label { display: block; font-weight: 500; margin: 0.75rem 0 0.25rem; }
+.hint { font-weight: 400; color: var(--muted); font-size: 0.9rem; }
+input[type="text"], input[type="password"], textarea, select {
+  font: inherit; width: 100%; padding: 0.45rem 0.6rem;
+  border: 1px solid var(--line); border-radius: 6px; background: #fff;
+}
+textarea { resize: vertical; }
+select { width: auto; }
+.actions { margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center; }
+
+.error {
+  color: var(--error); background: var(--error-soft); border-radius: 6px;
+  padding: 0.5rem 0.75rem; margin: 0.75rem 0 0;
+}
+.notice { color: var(--muted); }
+
+.tabs { display: flex; gap: 0.25rem; border-bottom: 1px solid var(--line); margin-bottom: 1rem; }
+.tabs button { border: none; border-bottom: 2px solid transparent; border-radius: 0; background: none; }
+.tabs button.active { border-bottom-color: var(--accent); color: var(--accent); }
+
+.list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+.list li {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: 0.75rem 0.25rem; border-bottom: 1px solid var(--line);
+}
+.list .sub { color: var(--muted); font-size: 0.9rem; }

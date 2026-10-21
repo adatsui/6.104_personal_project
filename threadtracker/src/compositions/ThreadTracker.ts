@@ -84,8 +84,7 @@ const ChartView = former(
   "the chart (chart) as seen by (user)",
   (
     { chart, user },
-    { title, owner, reached, row, label, index, column, columnLabel, post, postRow, postIndex, postColumn },
-  ) =>
+    { title, owner, reached, row, label, index, unreadRow, unreadIndex, column, columnLabel, post, postRow, postIndex, postColumn },  ) =>
     where(
       Charting._get({ chart }).is({ title, owner }),
       Progressing._reached({ user, context: chart }).is({ reached }),
@@ -94,7 +93,12 @@ const ChartView = former(
       title,
       owner,
       reached,
-      rows: each(Charting._rows({ chart }).is({ row, label, index })).form({ row, label, index }),
+      rows: each(Charting._rows({ chart }).is({ row, label, index }))
+        .where(RowReached({ index, user, chart }))
+        .form({ row, label, index }),
+      unreadRows: each(Charting._rows({ chart }).is({ row: unreadRow, index: unreadIndex }))
+        .where(is.gt(unreadIndex, reached))
+        .form({ row: unreadRow, index: unreadIndex }),      
       columns: each(Charting._columns({ chart }).is({ column, label: columnLabel })).form({
         column,
         label: columnLabel,

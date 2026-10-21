@@ -52,7 +52,7 @@ title, its columns, and only the rows whose index is at most the member's progre
 For each visible row, it includes the posts placed there with their column, author,
 quote, citation, analysis, upvote count, and whether the member has upvoted them,
 and each post's comments, oldest first. Posts in rows the member has not reached are
-never sent to the front end. A post is included only when [its row is reached](view:ThreadTracker.RowReached) by
+never sent to the front end. Rows the member has not reached are included only by position, without their label or posts. A post is included only when [its row is reached](view:ThreadTracker.RowReached) by
 the member, and each included post is shown as a [post card](former:ThreadTracker.PostCard)
 with its content, upvotes, and comments.
 

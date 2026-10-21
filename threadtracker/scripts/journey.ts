@@ -114,7 +114,12 @@ check(
 
 let millieView = await view(millie, chartId);
 check(millieView.reached === 0 && millieView.posts.length === 0, "before marking progress, Millie has reached nothing");
-const row = Object.fromEntries(millieView.rows.map((r) => [r.index, String(r.row)]));
+check(
+  millieView.rows.length === 0 && millieView.unreadRows.length === 5,
+  "every chapter is unread, sent by position only, with no titles",
+  millieView,
+);
+const row = Object.fromEntries(millieView.unreadRows.map((r) => [r.index, String(r.row)]));
 const column = Object.fromEntries(millieView.columns.map((c) => [c.label, String(c.column)]));
 
 // ---------------------------------------------------------------------------

@@ -131,6 +131,10 @@ export type ThreadTrackerWire = {
           "row": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["row"]>>;
         }[];
         "title": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_get"]>>>, ["title"]>>;
+        "unreadRows": {
+          "index": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["index"]>>;
+          "row": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["row"]>>;
+        }[];
       };
     };
     error: { error: AppWideError | "CHART_NOT_FOUND" | "INVALID_INPUT" | "NOT_MEMBER" | "UNKNOWN_SESSION" };
@@ -200,6 +204,10 @@ export type ThreadTrackerWire = {
           "row": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["row"]>>;
         }[];
         "title": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_get"]>>>, ["title"]>>;
+        "unreadRows": {
+          "index": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["index"]>>;
+          "row": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["row"]>>;
+        }[];
       };
     };
     error: { error: AppWideError | "CHART_NOT_FOUND" | "INVALID_INPUT" | "NOT_MEMBER" | "UNKNOWN_SESSION" };
@@ -401,6 +409,10 @@ export type ThreadTrackerWireHttp = {
           "row": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["row"]>>;
         }[];
         "title": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_get"]>>>, ["title"]>>;
+        "unreadRows": {
+          "index": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["index"]>>;
+          "row": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["row"]>>;
+        }[];
       };
     };
     error: { error: HttpAppWideError | "FORBIDDEN" | "INVALID_REQUEST" | "NOT_FOUND" | "UNAUTHORIZED" };
@@ -466,6 +478,10 @@ export type ThreadTrackerWireHttp = {
           "row": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["row"]>>;
         }[];
         "title": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_get"]>>>, ["title"]>>;
+        "unreadRows": {
+          "index": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["index"]>>;
+          "row": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_rows"]>>>, ["row"]>>;
+        }[];
       };
     };
     error: { error: HttpAppWideError | "FORBIDDEN" | "INVALID_REQUEST" | "NOT_FOUND" | "UNAUTHORIZED" };

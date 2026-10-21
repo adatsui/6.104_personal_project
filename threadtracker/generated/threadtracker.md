@@ -226,7 +226,7 @@ Authored path: `ThreadTracker.ChartView`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 69.
 
 ```former
-Former "the chart (chart) as seen by (user)" — inputs (chart, user); bindings (title, owner, reached, row, label, index, column, columnLabel, post, postRow, postIndex, postColumn); promises exactly one record — forms:
+Former "the chart (chart) as seen by (user)" — inputs (chart, user); bindings (title, owner, reached, row, label, index, unreadRow, unreadIndex, column, columnLabel, post, postRow, postIndex, postColumn); promises exactly one record — forms:
   a record of
     where Charting._get (chart) has (owner, title)
     where Progressing._reached (context: chart, user) has (reached)
@@ -246,11 +246,17 @@ Former "the chart (chart) as seen by (user)" — inputs (chart, user); bindings 
         row: postRow
     reached
     rows: each Charting._rows (chart) has (index, label, row)
+      where view "row (index) is reached by (user) in (chart)" with (chart, index, user)
       form a record of
         index
         label
         row
     title
+    unreadRows: each Charting._rows (chart) has (index: unreadIndex, row: unreadRow)
+      where unreadIndex is greater than reached
+      form a record of
+        index: unreadIndex
+        row: unreadRow
 ```
 
 ### the charts of (user)
