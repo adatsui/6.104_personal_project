@@ -314,6 +314,32 @@ const classmateExport = ok(await api.charts.export({ session: classmate, chart: 
 check(classmateExport.posts.some((p) => p.post === spoiler), "the classmate's export includes Chapter 5");
 
 // ---------------------------------------------------------------------------
+console.log("Deleting a post cleans up after it");
+
+const doomed = ok(
+  await api.posts.create({
+    session: classmate,
+    chart: chartId,
+    row: row[2]!,
+    column: column["free will"]!,
+    analysis: "A post that will be deleted.",
+  }),
+  "the classmate posts an idea",
+).post;
+ok(await api.posts.upvote({ session: millie, chart: chartId, post: doomed }), "Millie upvotes it");
+ok(await api.posts.delete({ session: classmate, chart: chartId, post: doomed }), "the classmate deletes it");
+
+const afterDelete = ok(await api.charts.view({ session: millie, chart: chartId }), "Millie views the chart").view;
+check(
+  !afterDelete.posts.some((p) => p.post === doomed),
+  "the deleted post is no longer in its cell",
+);
+check(
+  (await db.collection("upvoting.upvotes").countDocuments({ item: doomed })) === 0,
+  "the deleted post's upvotes are cleared",
+);
+
+// ---------------------------------------------------------------------------
 console.log("Access control");
 
 check(

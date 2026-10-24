@@ -17,7 +17,7 @@
  * half-finished change behind.
  */
 import { endpoint, receive, respond } from "@mit-sdg/sync-engine/boundary";
-import { each, form, former, is, view, where } from "@mit-sdg/sync-engine/language";
+import { each, form, former, is, view, where, reaction, when } from "@mit-sdg/sync-engine/language";
 import { concepts } from "../concepts.ts";
 
 const { Authenticating, Charting, Posting, Progressing, Sessioning, Upvoting } = concepts;
@@ -260,7 +260,6 @@ const DeletePost = endpoint(
       .then(Charting.checkMember({ chart, user }).responds({}))
       .then(Charting.checkItem({ item: post, chart }).responds({}))
       .then(Posting.delete({ post, author: user }).responds({}))
-      .then(Charting.deleteItem({ item: post, chart }).responds({}))
       .then(respond({ post })),
   { input: { required: ["session", "chart", "post"] } },
 );
@@ -306,6 +305,18 @@ const UnvotePost = endpoint(
   { input: { required: ["session", "chart", "post"] } },
 );
 
+// Whenever a post is deleted, through any endpoint, its upvotes go with it.
+const DeletedPostLosesUpvotes = reaction(({ post }) =>
+  when(Posting.delete({ post }).responds({})).then(Upvoting.clear({ item: post })),
+);
+
+// Whenever a placed post is deleted, it leaves its cell. Comments are never placed, so they don't match.
+const DeletedPostLeavesChart = reaction(({ post, chart }) =>
+  when(Posting.delete({ post }).responds({}))
+    .where(Charting._placement({ item: post }).is({ chart }))
+    .then(Charting.deleteItem({ item: post, chart })),
+);
+
 export const composition = {
   RowReached,
   ChartList,
@@ -326,4 +337,6 @@ export const composition = {
   DeleteComment,
   UpvotePost,
   UnvotePost,
+  DeletedPostLosesUpvotes,
+  DeletedPostLeavesChart,
 };

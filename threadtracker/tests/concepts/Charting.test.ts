@@ -138,4 +138,15 @@ describe("Charting", () => {
     expect(await charting.checkItem({ item: "a", chart })).toEqual({ index: 3 });
     await expect(charting.checkItem({ item: "a", chart: other.chart })).rejects.toThrow(ItemNotFound);
   });
+
+  test("_placement answers the chart an item is in, and nothing once it is removed", async () => {
+    const { chart, ch1, freeWill } = await edenChart();
+    expect(await charting._placement({ item: "idea" })).toEqual([]);
+
+    await charting.addItem({ item: "idea", chart, row: ch1, column: freeWill, user: "millie" });
+    expect(await charting._placement({ item: "idea" })).toEqual([{ chart }]);
+
+    await charting.deleteItem({ item: "idea", chart });
+    expect(await charting._placement({ item: "idea" })).toEqual([]);
+  });
 });

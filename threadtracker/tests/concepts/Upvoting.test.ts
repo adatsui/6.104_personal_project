@@ -44,4 +44,19 @@ describe("Upvoting", () => {
     await upvoting.unvote({ voter: "millie", item: "post-1" });
     await expect(upvoting.unvote({ voter: "millie", item: "post-1" })).rejects.toThrow(NotUpvoted);
   });
+
+  test("clear removes every upvote on an item, and only that item", async () => {
+    await upvoting.upvote({ voter: "millie", item: "post-1" });
+    await upvoting.upvote({ voter: "cal", item: "post-1" });
+    await upvoting.upvote({ voter: "millie", item: "post-2" });
+
+    await upvoting.clear({ item: "post-1" });
+    expect(await upvoting._count({ item: "post-1" })).toEqual({ count: 0 });
+    expect(await upvoting._hasUpvoted({ voter: "millie", item: "post-1" })).toEqual({ result: false });
+    expect(await upvoting._count({ item: "post-2" })).toEqual({ count: 1 });
+
+    // Clearing an item with no upvotes is not an error, so it is safe after any delete.
+    await upvoting.clear({ item: "post-1" });
+    expect(await upvoting._count({ item: "post-1" })).toEqual({ count: 0 });
+  });
 });

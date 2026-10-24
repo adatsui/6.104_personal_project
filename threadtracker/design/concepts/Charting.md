@@ -181,4 +181,6 @@ _columns(chart: Chart) : many (column: Column, label: String)
 _items(chart: Chart) : many (item: Item, row: Row, index: Number, column: Column)
   answers every item placed in chart with its row, the index of that row, and its column
   sorted by the index of the row, then by when the item was placed
+_placement(item: Item) : optional (chart: Chart)
+  answers the chart that item is placed in, or nothing for an item that is not placed
 ```

@@ -254,4 +254,9 @@ export class ChartingConcept {
     const placements = await this.placements.find({ chart }).sort({ index: 1, placed: 1 }).toArray();
     return placements.map(({ _id, row, index, column }) => ({ item: _id, row, index, column }));
   }
+
+  async _placement({ item }: { item: string }) {
+    const found = await this.placements.findOne({ _id: item });
+    return found === null ? [] : [{ chart: found.chart }];
+  }
 }

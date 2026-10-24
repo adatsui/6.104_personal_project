@@ -46,6 +46,11 @@ export class UpvotingConcept {
     return {};
   }
 
+  async clear({ item }: { item: string }) {
+    await this.upvotes.deleteMany({ item });
+    return {};
+  }
+
   async _count({ item }: { item: string }) {
     return { count: await this.upvotes.countDocuments({ item }) };
   }

@@ -243,12 +243,12 @@ export type ThreadTrackerWire = {
   };
   "/posts/delete": {
     input: {
-      "chart": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkMember"]>[0], ["chart"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["deleteItem"]>[0], ["chart"]>]>>;
-      "post": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkItem"]>[0], ["item"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["deleteItem"]>[0], ["item"]>]>>;
+      "chart": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkMember"]>[0], ["chart"]>>;
+      "post": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkItem"]>[0], ["item"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["delete"]>[0], ["post"]>]>>;
       "session": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Sessioning"]["current"]>[0], ["session"]>>;
     };
     output: {
-      "post": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["deleteItem"]>[0], ["item"]>>;
+      "post": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["delete"]>[0], ["post"]>>;
     };
     error: { error: AppWideError | "CHART_NOT_FOUND" | "INVALID_INPUT" | "ITEM_NOT_FOUND" | "NOT_AUTHOR" | "NOT_MEMBER" | "POST_NOT_FOUND" | "UNKNOWN_SESSION" };
   };
@@ -261,7 +261,7 @@ export type ThreadTrackerWire = {
     output: {
       "comment": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["delete"]>[0], ["post"]>>;
     };
-    error: { error: AppWideError | "CHART_NOT_FOUND" | "INVALID_INPUT" | "NOT_AUTHOR" | "NOT_MEMBER" | "POST_NOT_FOUND" | "UNKNOWN_SESSION" };
+    error: { error: AppWideError | "CHART_NOT_FOUND" | "INVALID_INPUT" | "ITEM_NOT_FOUND" | "NOT_AUTHOR" | "NOT_MEMBER" | "POST_NOT_FOUND" | "UNKNOWN_SESSION" };
   };
   "/posts/edit": {
     input: {
@@ -515,11 +515,11 @@ export type ThreadTrackerWireHttp = {
   };
   "/posts/delete": {
     input: {
-      "chart": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkMember"]>[0], ["chart"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["deleteItem"]>[0], ["chart"]>]>>;
-      "post": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkItem"]>[0], ["item"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["deleteItem"]>[0], ["item"]>]>>;
+      "chart": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkMember"]>[0], ["chart"]>>;
+      "post": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkItem"]>[0], ["item"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["delete"]>[0], ["post"]>]>>;
     };
     output: {
-      "post": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["deleteItem"]>[0], ["item"]>>;
+      "post": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["delete"]>[0], ["post"]>>;
     };
     error: { error: HttpAppWideError | "FORBIDDEN" | "INVALID_REQUEST" | "NOT_FOUND" | "UNAUTHORIZED" };
   };

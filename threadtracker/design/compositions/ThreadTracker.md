@@ -89,7 +89,13 @@ same rules as creating: a quote needs a citation, and a post cannot be empty.
 
 The author of a post [deletes it](reaction:ThreadTracker.DeletePost) after Charting
 confirms membership and that the post is in the chart. Posting deletes the post with
-its comments, and Charting removes it from its cell.
+its comments.
+
+Whenever a post is deleted, through any endpoint,
+[its upvotes are cleared](reaction:ThreadTracker.DeletedPostLosesUpvotes), and if it
+was placed in a chart, [it is removed from its cell](reaction:ThreadTracker.DeletedPostLeavesChart).
+Comments are never placed in a chart, so deleting a comment changes only Posting and
+Upvoting.
 
 The author of a comment [deletes the comment](reaction:ThreadTracker.DeleteComment)
 after Charting confirms membership. A comment was never placed in the chart, so only

@@ -48,6 +48,12 @@ unvote(voter: User, item: Item) : returns ()
   then
     remove that upvote
     returns
+
+clear(item: Item) : returns ()
+  where true
+  then
+    remove every upvote with item
+    returns
 ```
 
 ## Queries
