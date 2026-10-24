@@ -1,2 +1,10 @@
 threadtracker/p2demo.mov
 threadtracker/p2demo.mov
+node_modules/
+*.tsbuildinfo
+*.log
+.env
+.env.*
+.DS_Store
+!.env.example
+web/dist
