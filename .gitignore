@@ -1,8 +1,7 @@
-threadtracker/p2demo.mov
-threadtracker/p2demo.mov
 node_modules/
 *.tsbuildinfo
 *.log
+*.zip
 .env
 .env.*
 .DS_Store

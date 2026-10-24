@@ -19,6 +19,6 @@ In ThreadTracker, each book has a chart with chapters as rows and literary eleme
 
 Each test file gets its own database, so the tests never touch the app's data. MongoDB must be running (`bun run db:up`).
 
-1. **Concept tests.** `bun test` runs the concept test suites in `tests/concepts/`, and nothing else. The saved output is in [test-output.txt](threadtracker/test-output.txt).
+1. **Concept tests.** `bun test` runs the concept test suites in `tests/concepts/`, and nothing else. The saved output is in [test-output.txt](test-output.txt).
 2. **Journey script.** `bun run journey` runs the core user journey end to end and checks every outcome. It is a script, not part of `bun test`, and the app's own database is never touched.
-3. **Manual tests.** [manual-tests.md](threadtracker/manual-tests.md) covers what the automated tests cannot: that the Vue frontend updates without a page refresh, shows informative error messages, and enforces access in the browser.
+3. **Manual tests.** [manual-tests.md](manual-tests.md) covers what the automated tests cannot: that the Vue frontend updates without a page refresh, shows informative error messages, and enforces access in the browser.

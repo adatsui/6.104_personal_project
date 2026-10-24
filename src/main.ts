@@ -8,6 +8,9 @@ const application = assembleApplication(db);
 const gateway = createGateway({ application });
 const api = createHttpHandler({ application, gateway, policy });
 
+// The built Vue app, served for every path that is not /api or /health.
+const dist = `${import.meta.dir}/../web/dist`;
+
 const server = Bun.serve({
   hostname: process.env.HOST ?? "127.0.0.1",
   port: Number(process.env.PORT ?? 3000),
@@ -24,6 +27,10 @@ const server = Bun.serve({
         );
       }
     },
+  },
+  async fetch(request) {
+    const file = Bun.file(dist + new URL(request.url).pathname);
+    return new Response((await file.exists()) ? file : Bun.file(`${dist}/index.html`));
   },
 });
 
