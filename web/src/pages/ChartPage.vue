@@ -244,6 +244,8 @@ function exportChart() {
 /* Green = my reading: the "I have read" control. */
 label[for="progress"] { color: var(--green-text); }
 #progress { border-color: var(--green); box-shadow: inset 3px 0 0 var(--green); }
+/* The chapter range only covers chapters I have read, so it carries the same green edge. */
+select[aria-label="From chapter"], select[aria-label="To chapter"] { box-shadow: inset 3px 0 0 var(--green); }
 
 .grid-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
 .grid { border-collapse: collapse; width: 100%; }

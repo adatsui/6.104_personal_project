@@ -42,7 +42,7 @@ async function submit() {
       <div class="quote-row">
         <div class="field">
           <label :for="`${kind}-quote`">Quote</label>
-          <input :id="`${kind}-quote`" v-model="quote" type="text" />
+          <textarea :id="`${kind}-quote`" v-model="quote" :rows="kind === 'comment' ? 2 : 3"></textarea>
         </div>
         <div class="field small">
           <label :for="`${kind}-citation`">Citation</label>
@@ -62,8 +62,7 @@ async function submit() {
 </template>
 
 <style scoped>
-.quote-row { display: flex; gap: 0.5rem; }
-.field { flex: 2; }
-.field.small { flex: 1; }
+/* Quote on its own full-width line, the citation on a full line underneath. */
+.quote-row { display: flex; flex-direction: column; }
 .idea-form label { margin-top: 0.5rem; }
 </style>
