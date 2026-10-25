@@ -16,7 +16,7 @@ These checks cover what the automated tests cannot: that the Vue frontend update
 
 | # | Steps | Expected | Result |
 |---|---|---|---|
-| 0.1 | Open http://127.0.0.1:8080/charts/anything while signed out. | You are sent to the sign-in page. | |
+| 0.1 | Open http://127.0.0.1:8080/charts/anything while signed out. | You are sent to the sign-in page. | ✅ |
 | 0.2 | Create accounts `teacher`, `millie`, and `classmate` in their sessions. | Each lands on My Charts, which says you are not a member of any chart yet. | ✅ |
 | 0.3 | Create account `millie` again in another session. | "Choose a different username. That username is already taken." No account is created. | ✅ |
 | 0.4 | Create account `ab` (too short). | "Choose a username of 3 to 32 letters, numbers, underscores, or hyphens, and a password of 8 to 128 characters." | ✅ |
