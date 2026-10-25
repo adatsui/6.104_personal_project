@@ -87,6 +87,9 @@ describe("Charting", () => {
     await expect(charting.addMember({ chart: "missing", owner: "teacher", user: "cal" })).rejects.toThrow(
       ChartNotFound,
     );
+    // The refusals change nothing: cal is in no chart, and millie is in this one only once.
+    expect(await charting._chartsFor({ user: "cal" })).toEqual([]);
+    expect(await charting._chartsFor({ user: "millie" })).toHaveLength(1);
   });
 
   test("members add columns at the end, without repeating a label", async () => {
@@ -95,6 +98,10 @@ describe("Charting", () => {
     expect((await charting._columns({ chart })).at(-1)).toEqual({ column, label: "names" });
     await expect(charting.addColumn({ chart, label: "names", user: "teacher" })).rejects.toThrow(DuplicateColumn);
     await expect(charting.addColumn({ chart, label: "other", user: "outsider" })).rejects.toThrow(NotMember);
+    // The refusals change nothing: "names" appears once, and "other" was never added.
+    const labels = (await charting._columns({ chart })).map((c) => c.label);
+    expect(labels.filter((l) => l === "names")).toHaveLength(1);
+    expect(labels).not.toContain("other");
   });
 
   test("refuses placing an item for a non-member, outside the chart, or twice", async () => {

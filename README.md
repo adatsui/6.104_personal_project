@@ -4,7 +4,7 @@ The problem is that between class discussions and individual essay-writing, each
 
 In ThreadTracker, each book has a chart with chapters as rows and literary elements as columns. In each cell, students post ideas. Ideas are already organized by their location in the chronology of the book (row) and their literary element (column), not by when they were discussed.
 
-- **Live app:** https://NAME.mit-sdg.dev
+- **Live app:** https://threadtracker.mit-sdg.dev
 - [P1: Design](p1.md)
 - [P2: Alpha (MVP)](p2.md)
 - [P3: Beta](p3.md)

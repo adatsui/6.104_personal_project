@@ -35,9 +35,11 @@ describe("Progressing", () => {
     await expect(progressing.checkReached({ user: "millie", context: "eden", step: 1 })).rejects.toThrow(NotReached);
   });
 
-  test("refuses negative progress", async () => {
+  test("refuses negative progress, and keeps the progress already recorded", async () => {
+    await progressing.setProgress({ user: "millie", context: "eden", reached: 3 });
     await expect(progressing.setProgress({ user: "millie", context: "eden", reached: -1 })).rejects.toThrow(
       InvalidProgress,
     );
+    expect(await progressing._reached({ user: "millie", context: "eden" })).toEqual({ reached: 3 });
   });
 });

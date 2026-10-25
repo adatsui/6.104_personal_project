@@ -30,6 +30,13 @@ describe("Authenticating", () => {
     await expect(authenticating.register({ username: "millie", password: "different1" })).rejects.toThrow(
       UsernameTaken,
     );
+    // The refused registration changes nothing: the original password still works, and the new one does not.
+    expect(await authenticating.authenticate({ username: "millie", password: "timshel123" })).toEqual({
+      account: "millie",
+    });
+    await expect(authenticating.authenticate({ username: "millie", password: "different1" })).rejects.toThrow(
+      InvalidCredentials,
+    );
   });
 
   test("refuses a wrong password and an unknown username", async () => {

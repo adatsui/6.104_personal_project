@@ -83,8 +83,11 @@ describe("Posting", () => {
 
   test("refuses an edit that breaks the content rules", async () => {
     const { post } = await posting.create({ author: "millie", ...idea });
+    const before = await posting._get({ post });
     await expect(posting.edit({ post, author: "millie", quote: "x" })).rejects.toThrow(QuoteNeedsCitation);
     await expect(posting.edit({ post, author: "millie" })).rejects.toThrow(EmptyPost);
+    // A refused edit leaves the post exactly as it was.
+    expect(await posting._get({ post })).toEqual(before);
   });
 
   test("lets only the author delete", async () => {
