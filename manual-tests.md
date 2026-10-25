@@ -17,7 +17,7 @@ These checks cover what the automated tests cannot: that the Vue frontend update
 | # | Steps | Expected | Result |
 |---|---|---|---|
 | 0.1 | Open http://127.0.0.1:8080/charts/anything while signed out. | You are sent to the sign-in page. | |
-| 0.2 | Create accounts `teacher`, `millie`, and `classmate` in their sessions. | Each lands on My charts, which says you are not a member of any chart yet. | |
+| 0.2 | Create accounts `teacher`, `millie`, and `classmate` in their sessions. | Each lands on My Charts, which says you are not a member of any chart yet. | |
 | 0.3 | Create account `millie` again in another session. | "Choose a different username. That username is already taken." No account is created. | |
 | 0.4 | Create account `ab` (too short). | "Choose a username of 3 to 32 letters, numbers, underscores, or hyphens, and a password of 8 to 128 characters." | |
 | 0.5 | Sign in as `millie` with the wrong password. | "Check your username and password. They do not match an account." | |
@@ -25,11 +25,11 @@ These checks cover what the automated tests cannot: that the Vue frontend update
 | 0.7 | As teacher, enter two chapters with the same name. | "Rename one of the chapters. Two chapters are named "…"." No chart is created. | |
 | 0.8 | As teacher, enter two literary elements with the same name. | "Rename one of the literary elements. Two literary elements are named "…"." No chart is created. | |
 | 0.9 | As teacher, create *East of Eden* with 5 chapters (use real titles, such as "The Salinas Valley") and the literary elements "free will," "sibling rivalry," and "Cain and Abel." | The chart page opens. All 5 chapters are greyed out as "Chapter 1" to "Chapter 5," with no titles, and the page says "Chapters 1–5 have not been read." | |
-| 0.10 | As teacher, open Chart settings and add `nobody`. | "Check the username. No one has registered as "nobody"." | |
+| 0.10 | As teacher, open Chart Settings and add `nobody`. | "Check the username. No one has registered as "nobody"." | |
 | 0.11 | As teacher, add `millie` and `classmate`. | Each shows "… is now a member of this chart." | |
 | 0.12 | As teacher, add `millie` again. | "Choose someone else. millie is already a member of this chart." | |
-| 0.13 | As Millie, reload My charts. | *East of Eden* is listed, with owner teacher. | |
-| 0.14 | As Millie, open the chart, then open Chart settings. | There is no add-member form, only "Only the owner of this chart, teacher, can add members." | |
+| 0.13 | As Millie, reload My Charts. | *East of Eden* is listed, with owner teacher. | |
+| 0.14 | As Millie, open the chart, then open Chart Settings. | There is no add-member form, only "Only the owner of this chart, teacher, can add members." | |
 
 ## 1. Reading and marking progress
 
@@ -63,7 +63,7 @@ These checks cover what the automated tests cannot: that the Vue frontend update
 | 3.6 | Upvote it again, then write a comment and click Comment. | The comment appears under the idea with Millie's username, without a refresh. | |
 | 3.7 | Click "Add a quote" in the comment form, enter only a quote, and click Comment. | "Add a citation. A quote needs a citation." | |
 | 3.8 | Click Delete next to Millie's comment. | The comment disappears without a refresh, and the idea stays. | |
-| 3.9 | As the classmate, open Chart settings and add the literary element "names." | ""names" was added to the chart." It appears at the end of the list, and as a new column on the chart. | |
+| 3.9 | As the classmate, open Chart Settings and add the literary element "names." | ""names" was added to the chart." It appears at the end of the list, and as a new column on the chart. | |
 | 3.10 | As the classmate, add "names" again. | "Choose a different name. This chart already has a literary element called "names"." | |
 
 ## 4. Falling behind

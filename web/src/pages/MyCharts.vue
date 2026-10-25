@@ -18,7 +18,7 @@ onMounted(async () => {
 
 <template>
   <div class="heading">
-    <h1>My charts</h1>
+    <h1>My Charts</h1>
     <RouterLink :to="{ name: 'newChart' }"><button type="button" class="primary">New chart</button></RouterLink>
   </div>
   <p v-if="error" class="error">{{ error }}</p>
@@ -40,4 +40,6 @@ onMounted(async () => {
 <style scoped>
 .heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .heading h1 { margin: 0; }
+/* Book titles are the book's voice. */
+.list li > div > div:first-child { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; }
 </style>

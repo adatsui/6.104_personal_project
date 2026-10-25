@@ -131,8 +131,8 @@ function exportChart() {
       <div class="heading">
         <h1>{{ view.title }}</h1>
         <nav>
-          <RouterLink :to="{ name: 'myCharts' }">← My charts</RouterLink>
-          <RouterLink :to="{ name: 'chartSettings', params: { chart } }">Chart settings</RouterLink>
+          <RouterLink :to="{ name: 'myCharts' }">← My Charts</RouterLink>
+          <RouterLink :to="{ name: 'chartSettings', params: { chart } }">Chart Settings</RouterLink>
         </nav>
       </div>
 
@@ -140,7 +140,7 @@ function exportChart() {
         <div class="control">
           <label for="progress">I have read</label>
           <select id="progress" :value="progressRow" @change="setProgress">
-            <option v-if="view.reached === 0" value="" disabled>Choose a chapter</option>
+            <option v-if="view.reached === 0" value="" disabled>choose</option>
             <option v-for="chapter in allChapters" :key="chapter.row" :value="chapter.row">
               {{ chapter.label }}
             </option>
@@ -231,27 +231,41 @@ function exportChart() {
 </template>
 
 <style scoped>
-.page { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start; }
+.page { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; align-items: start; }
 .page.with-panel { grid-template-columns: minmax(0, 1fr) 26rem; }
-.heading { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-.heading nav { display: flex; gap: 1rem; }
+.heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 1rem; }
+.heading nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
 .controls { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
 .control { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
-.control > label:first-child, .control-label { font-weight: 500; margin: 0; min-width: 8.5rem; }
+.control > label:first-child, .control-label { font-weight: 600; margin: 0; min-width: 8.5rem; }
 .check { display: inline-flex; align-items: center; gap: 0.3rem; font-weight: 400; margin: 0; }
 .buttons { display: flex; gap: 0.5rem; }
-.grid-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+
+/* Green = my reading: the "I have read" control. */
+label[for="progress"] { color: var(--green-text); }
+#progress { border-color: var(--green); box-shadow: inset 3px 0 0 var(--green); }
+
+.grid-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
 .grid { border-collapse: collapse; width: 100%; }
 .grid th, .grid td { border-bottom: 1px solid var(--line); padding: 0; text-align: left; }
-.grid thead th { padding: 0.5rem 0.75rem; background: var(--soft); font-weight: 600; }
-.grid tbody th { padding: 0.5rem 0.75rem; font-weight: 500; white-space: nowrap; }
+.grid thead th { padding: 0.5rem 0.75rem; background: var(--paper-deep); font-weight: 600; }
+/* Chapter labels are the book's voice. Rows I have read get a thin green left edge. */
+.grid tbody th {
+  padding: 0.5rem 0.75rem; font-family: var(--serif); font-weight: 600; white-space: nowrap;
+  box-shadow: inset 3px 0 0 var(--green);
+}
 .grid tr:last-child th, .grid tr:last-child td { border-bottom: none; }
+
+/* Blue = the chart: idea counts and hover. Orange outline = the cell whose ideas are open. */
 .cell {
   width: 100%; border: none; border-radius: 0; text-align: left;
-  padding: 0.5rem 0.75rem; background: none; color: var(--accent);
+  padding: 0.5rem 0.75rem; background: none; color: var(--blue);
 }
-.cell.empty { color: var(--faint); }
-.cell:hover { background: var(--accent-soft); }
-.cell.open { background: var(--accent-soft); font-weight: 600; }
-.unread th, .unread td { color: var(--faint); background: var(--soft); }
+.cell.empty { color: var(--muted); }
+.cell:hover { background: var(--blue-soft); }
+.cell.open { background: var(--blue-soft); font-weight: 600; outline: 2px solid var(--orange); outline-offset: -2px; }
+
+/* Unread chapters: grayed out, with no green edge. */
+.grid .unread th, .grid .unread td { background: var(--unread); }
+.grid .unread th { color: var(--unread-text); font-style: italic; font-weight: 400; box-shadow: none; }
 </style>

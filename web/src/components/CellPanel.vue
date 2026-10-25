@@ -34,13 +34,16 @@ async function addIdea(content: Content): Promise<string | null> {
 </template>
 
 <style scoped>
+/* The panel holds classmates' ideas, so it carries orange: a top border and a tinted header. */
 .panel {
   position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto;
-  border: 1px solid var(--line); border-radius: 8px; padding: 0 1rem 1rem;
+  border: 1px solid var(--line); border-top: 3px solid var(--orange); border-radius: 8px;
+  padding: 0 1rem 1rem; background: var(--paper);
 }
 header {
   display: flex; justify-content: space-between; align-items: center;
-  position: sticky; top: 0; background: #fff; padding-top: 1rem; border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 1; background: var(--orange-soft);
+  margin: 0 -1rem; padding: 1rem 1rem 0; border-bottom: 1px solid var(--line);
 }
 header h2 { margin: 0 0 0.75rem; }
 </style>

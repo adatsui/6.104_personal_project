@@ -57,7 +57,7 @@ async function create() {
 </script>
 
 <template>
-  <RouterLink :to="{ name: 'myCharts' }">← My charts</RouterLink>
+  <RouterLink :to="{ name: 'myCharts' }">← My Charts</RouterLink>
   <h1>New chart</h1>
   <form @submit.prevent="create">
     <label for="title">Title</label>

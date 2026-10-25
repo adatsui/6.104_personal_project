@@ -78,16 +78,19 @@ const elementNames = computed(() =>
 </template>
 
 <style scoped>
-.export { font-family: Georgia, "Times New Roman", serif; }
-.scope { color: var(--muted); margin-top: -0.5rem; }
-h2 { border-bottom: 1px solid var(--line); padding-bottom: 0.25rem; }
+/* Black on white for printing. Serif for the book (headings, quotes), sans for the students (analysis). */
+.export { font-family: var(--sans); color: #000; background: #fff; padding: 1.5rem; border-radius: 8px; }
+h1, h2 { font-family: var(--serif); }
+.scope { color: #444; margin-top: -0.5rem; }
+h2 { border-bottom: 1px solid #bbb; padding-bottom: 0.25rem; }
 .idea { margin: 0 0 1rem; break-inside: avoid; }
-.element { font-family: system-ui, sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 0 0.2rem; }
-blockquote { margin: 0 0 0.3rem; font-style: italic; }
-cite { font-style: normal; color: var(--muted); }
+.element { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: #444; margin: 0 0 0.2rem; }
+blockquote { margin: 0 0 0.3rem; font-family: var(--serif); font-style: italic; }
+cite { font-family: var(--sans); font-style: normal; color: #444; }
 .idea p { margin: 0 0 0.3rem; }
-.comments { margin: 0.25rem 0 0; padding-left: 1rem; border-left: 2px solid var(--line); list-style: none; }
+.comments { margin: 0.25rem 0 0; padding-left: 1rem; border-left: 2px solid #bbb; list-style: none; }
 @media print {
   .no-print { display: none; }
+  .export { padding: 0; }
 }
 </style>

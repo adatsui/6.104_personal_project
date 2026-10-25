@@ -71,7 +71,7 @@ async function addElement() {
   <p v-else-if="view === null" class="notice">Loading…</p>
   <template v-else>
     <RouterLink :to="{ name: 'chart', params: { chart } }">← {{ view.title }}</RouterLink>
-    <h1>Chart settings</h1>
+    <h1>Chart Settings</h1>
 
     <h2>Members</h2>
     <form v-if="view.owner === currentUser" @submit.prevent="addMember">
@@ -81,7 +81,7 @@ async function addElement() {
         <button type="submit" class="primary">Add member</button>
       </div>
       <p v-if="memberError" class="error">{{ memberError }}</p>
-      <p v-if="memberAdded" class="notice">{{ memberAdded }}</p>
+      <p v-if="memberAdded" class="success">{{ memberAdded }}</p>
     </form>
     <p v-else class="notice">Only the owner of this chart, {{ view.owner }}, can add members.</p>
 
@@ -96,7 +96,7 @@ async function addElement() {
         <button type="submit" class="primary">Add</button>
       </div>
       <p v-if="elementError" class="error">{{ elementError }}</p>
-      <p v-if="elementAdded" class="notice">{{ elementAdded }}</p>
+      <p v-if="elementAdded" class="success">{{ elementAdded }}</p>
     </form>
   </template>
 </template>

@@ -49,7 +49,7 @@ const messages: Record<Place, Partial<Record<string, string>>> = {
   },
   openChart: {
     FORBIDDEN: "Ask the owner of this chart to add you. You are not a member of this chart.",
-    NOT_FOUND: "Go back to My charts. This chart does not exist.",
+    NOT_FOUND: "Go back to My Charts. This chart does not exist.",
   },
   progress: {
     NOT_FOUND: "Refresh the chart. That chapter is not in this chart.",
