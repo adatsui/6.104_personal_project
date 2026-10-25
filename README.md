@@ -5,13 +5,15 @@ The problem is that between class discussions and individual essay-writing, each
 In ThreadTracker, each book has a chart with chapters as rows and literary elements as columns. In each cell, students post ideas. Ideas are already organized by their location in the chronology of the book (row) and their literary element (column), not by when they were discussed.
 
 - **Live app:** https://threadtracker.mit-sdg.dev
-- [P1: Design](p1.md)
-- [P2: Alpha (MVP)](p2.md)
-- [P3: Beta](p3.md)
+- **Demo video (P3):** YOUTUBE LINK
+- **Assignments:** [P1: Design](p1.md) · [P2: Alpha (MVP)](p2.md) · [P3: Beta](p3.userjourney.md)
+- **Visual design study:** [typography](design/study/typography.jpg) · [color](design/study/color.jpg)
+- **Specifications:** [concepts](design/concepts/) · [compositions](design/compositions/) · [types](design/types.md)
+- **Code:** [back end](src/) · [front end](web/src/) · [concept tests](tests/concepts/) · [journey script](scripts/journey.ts)
 
 # Running Locally
 
-1. **Install.** Clone the repo, then run `cd threadtracker` and `bun install`.
+1. **Install.** Clone the repo, then run `bun install`.
 2. **Set up the database.** Copy `.env.example` to `.env`. It points at the local MongoDB in `compose.yaml`, which needs Podman.
 3. **Start.** Start from an empty database: `bun run db:reset`, then `bun run dev`. Open http://127.0.0.1:8080.
 
