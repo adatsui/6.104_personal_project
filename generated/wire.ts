@@ -69,7 +69,7 @@ export type ThreadTrackerWire = {
   };
   "/charts/add-member": {
     input: {
-      "chart": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addMember"]>[0], ["chart"]>>;
+      "chart": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addMember"]>[0], ["chart"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkOwner"]>[0], ["chart"]>]>>;
       "session": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Sessioning"]["current"]>[0], ["session"]>>;
       "username": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Authenticating"]["_registered"]>[0], ["username"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addMember"]>[0], ["user"]>]>>;
     };
@@ -101,6 +101,9 @@ export type ThreadTrackerWire = {
         "columns": {
           "column": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_columns"]>>>, ["column"]>>;
           "label": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_columns"]>>>, ["label"]>>;
+        }[];
+        "members": {
+          "member": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_members"]>>>, ["member"]>>;
         }[];
         "owner": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_get"]>>>, ["owner"]>>;
         "posts": {
@@ -175,6 +178,9 @@ export type ThreadTrackerWire = {
           "column": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_columns"]>>>, ["column"]>>;
           "label": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_columns"]>>>, ["label"]>>;
         }[];
+        "members": {
+          "member": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_members"]>>>, ["member"]>>;
+        }[];
         "owner": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_get"]>>>, ["owner"]>>;
         "posts": {
           "card": {
@@ -231,9 +237,9 @@ export type ThreadTrackerWire = {
       "analysis"?: Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["create"]>[0], ["analysis"]>>;
       "chart": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkMember"]>[0], ["chart"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Progressing"]["checkReached"]>[0], ["context"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["chart"]>]>>;
       "citation"?: Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["create"]>[0], ["citation"]>>;
-      "column": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["column"]>>;
+      "column": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkCell"]>[0], ["column"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["column"]>]>>;
       "quote"?: Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["create"]>[0], ["quote"]>>;
-      "row": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkRow"]>[0], ["row"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["row"]>]>>;
+      "row": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkCell"]>[0], ["row"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["row"]>]>>;
       "session": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Sessioning"]["current"]>[0], ["session"]>>;
     };
     output: {
@@ -350,7 +356,7 @@ export type ThreadTrackerWireHttp = {
   };
   "/charts/add-member": {
     input: {
-      "chart": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addMember"]>[0], ["chart"]>>;
+      "chart": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addMember"]>[0], ["chart"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkOwner"]>[0], ["chart"]>]>>;
       "username": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Authenticating"]["_registered"]>[0], ["username"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addMember"]>[0], ["user"]>]>>;
     };
     output: {
@@ -379,6 +385,9 @@ export type ThreadTrackerWireHttp = {
         "columns": {
           "column": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_columns"]>>>, ["column"]>>;
           "label": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_columns"]>>>, ["label"]>>;
+        }[];
+        "members": {
+          "member": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_members"]>>>, ["member"]>>;
         }[];
         "owner": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_get"]>>>, ["owner"]>>;
         "posts": {
@@ -449,6 +458,9 @@ export type ThreadTrackerWireHttp = {
           "column": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_columns"]>>>, ["column"]>>;
           "label": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_columns"]>>>, ["label"]>>;
         }[];
+        "members": {
+          "member": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_members"]>>>, ["member"]>>;
+        }[];
         "owner": Jsonify<AtPath<QueryRow<Awaited<ReturnType<(typeof ApplicationConceptSet.concepts)["Charting"]["_get"]>>>, ["owner"]>>;
         "posts": {
           "card": {
@@ -504,9 +516,9 @@ export type ThreadTrackerWireHttp = {
       "analysis"?: Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["create"]>[0], ["analysis"]>>;
       "chart": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkMember"]>[0], ["chart"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Progressing"]["checkReached"]>[0], ["context"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["chart"]>]>>;
       "citation"?: Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["create"]>[0], ["citation"]>>;
-      "column": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["column"]>>;
+      "column": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkCell"]>[0], ["column"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["column"]>]>>;
       "quote"?: Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Posting"]["create"]>[0], ["quote"]>>;
-      "row": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkRow"]>[0], ["row"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["row"]>]>>;
+      "row": Jsonify<OneOf<[AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["checkCell"]>[0], ["row"]>, AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["row"]>]>>;
     };
     output: {
       "post": Jsonify<AtPath<Parameters<(typeof ApplicationConceptSet.concepts)["Charting"]["addItem"]>[0], ["item"]>>;

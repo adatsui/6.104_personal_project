@@ -353,6 +353,22 @@ check(
   ),
   "a non-member cannot post, even by calling the endpoint directly",
 );
+const postsBefore = await db.collection("posting.posts").countDocuments();
+check(
+  refused(
+    await api.posts.create({ session: classmate, chart: chartId, row: row[1]!, column: "not-a-column", analysis: "x" }),
+    "NOT_IN_CHART",
+  ),
+  "a post in a column that isn't in the chart is refused",
+);
+check(
+  (await db.collection("posting.posts").countDocuments()) === postsBefore,
+  "the refused post is not created at all, so no post is left outside a cell",
+);
+check(
+  refused(await api.charts["add-member"]({ session: millie, chart: chartId, username: "nobody" }), "NOT_OWNER"),
+  "a non-owner can't use adding a member to find out which usernames are registered",
+);
 check(
   refused(await api.charts.view({ session: "invented", chart: chartId }), "UNKNOWN_SESSION"),
   "a request without a valid session is refused",

@@ -41,6 +41,7 @@ async function addMember() {
   }
   memberAdded.value = `${name} is now a member of this chart.`;
   username.value = "";
+  await load();
 }
 
 async function addElement() {
@@ -74,6 +75,12 @@ async function addElement() {
     <h1>Chart Settings</h1>
 
     <h2>Members</h2>
+    <ul class="list">
+      <li v-for="m in view.members" :key="m.member">
+        <span>{{ m.member }}<template v-if="m.member === currentUser"> (you)</template></span>
+        <span v-if="m.member === view.owner" class="sub">owner</span>
+      </li>
+    </ul>
     <form v-if="view.owner === currentUser" @submit.prevent="addMember">
       <label for="member">Add a member by username</label>
       <div class="inline">

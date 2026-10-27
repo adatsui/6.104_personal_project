@@ -153,6 +153,26 @@ checkRow(row: Row, chart: Chart) : returns (index: Number)
     bind index to the index of row
     returns index
 
+checkCell(chart: Chart, row: Row, column: Column) : returns (index: Number)
+  where row or column does not belong to chart
+  then
+    refuses NOT_IN_CHART "That chapter or literary element is not in this chart."
+  where row and column belong to chart
+  then
+    bind index to the index of row
+    returns index
+
+checkOwner(chart: Chart, owner: User) : returns ()
+  where chart is not in Charts
+  then
+    refuses CHART_NOT_FOUND "There is no such chart."
+  where owner is not the owner of chart
+  then
+    refuses NOT_OWNER "Only the owner of this chart can add members."
+  where owner is the owner of chart
+  then
+    returns
+
 checkItem(item: Item, chart: Chart) : returns (index: Number)
   where item is not placed in chart
   then
@@ -171,6 +191,9 @@ _get(chart: Chart) : optional (title: String, owner: User)
 
 _chartsFor(user: User) : many (chart: Chart, title: String, owner: User)
   answers every chart that user is a member of, oldest first
+
+_members(chart: Chart) : many (member: User)
+  answers every member of chart, including the owner, in alphabetical order
 
 _rows(chart: Chart) : many (row: Row, label: String, index: Number)
   answers every row of chart with its label and index, in index order

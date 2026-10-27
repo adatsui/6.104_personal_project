@@ -129,7 +129,15 @@ function exportChart() {
   <div v-else class="page" :class="{ 'with-panel': openCellRow && openCellColumn }">
     <section class="chart">
       <div class="heading">
-        <h1>{{ view.title }}</h1>
+        <div>
+          <h1>{{ view.title }}</h1>
+          <p class="byline">
+            Owned by {{ view.owner }} ·
+            <RouterLink :to="{ name: 'chartSettings', params: { chart } }">
+              {{ view.members.length }} {{ view.members.length === 1 ? "member" : "members" }}
+            </RouterLink>
+          </p>
+        </div>
         <nav>
           <RouterLink :to="{ name: 'myCharts' }">← My Charts</RouterLink>
           <RouterLink :to="{ name: 'chartSettings', params: { chart } }">Chart Settings</RouterLink>
@@ -235,6 +243,8 @@ function exportChart() {
 .page.with-panel { grid-template-columns: minmax(0, 1fr) 26rem; }
 .heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 1rem; }
 .heading nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+.heading h1 { margin-bottom: 0.15rem; }
+.byline { margin: 0 0 1rem; color: var(--muted); }
 .controls { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
 .control { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
 .control > label:first-child, .control-label { font-weight: 600; margin: 0; min-width: 8.5rem; }

@@ -220,6 +220,19 @@ export class ChartingConcept {
     return { index: found.index };
   }
 
+  async checkCell({ chart, row, column }: { chart: string; row: string; column: string }) {
+    const foundRow = await this.rows.findOne({ _id: row, chart });
+    const foundColumn = await this.columns.findOne({ _id: column, chart });
+    if (foundRow === null || foundColumn === null) throw new NotInChart(NOT_IN_CHART);
+    return { index: foundRow.index };
+  }
+
+  async checkOwner({ chart, owner }: { chart: string; owner: string }) {
+    const found = await this.#existingChart(chart);
+    if (found.owner !== owner) throw new NotOwner("Only the owner of this chart can add members.");
+    return {};
+  }
+
   async checkItem({ item, chart }: { item: string; chart: string }) {
     const found = await this.placements.findOne({ _id: item, chart });
     if (found === null) throw new ItemNotFound(ITEM_NOT_FOUND);
@@ -238,6 +251,11 @@ export class ChartingConcept {
       .sort({ created: 1 })
       .toArray();
     return charts.map(({ _id, title, owner }) => ({ chart: _id, title, owner }));
+  }
+
+  async _members({ chart }: { chart: string }) {
+    const memberships = await this.memberships.find({ chart }).sort({ member: 1 }).toArray();
+    return memberships.map(({ member }) => ({ member }));
   }
 
   async _rows({ chart }: { chart: string }) {

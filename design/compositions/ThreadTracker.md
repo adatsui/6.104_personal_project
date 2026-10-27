@@ -12,7 +12,8 @@ title, the book's chapters as rows, and literary elements as columns, and become
 its owner and first member. The owner
 [adds a member by username](reaction:ThreadTracker.AddMember) when that username
 is registered; [an unregistered username is refused](reaction:ThreadTracker.RejectUnknownMember)
-with `UNKNOWN_USER`.
+with `UNKNOWN_USER`, but only after Charting confirms the caller is the owner, so a
+non-owner can't learn which usernames are registered.
 
 ```endpoints
 ThreadTracker.CreateChart at /charts/create
@@ -48,7 +49,9 @@ ThreadTracker.UpdateProgress at /charts/progress
 
 A member [views the chart](reaction:ThreadTracker.ViewChart) through the
 [chart view](former:ThreadTracker.ChartView). The chart view includes the chart's
-title, its columns, and only the rows whose index is at most the member's progress.
+title, its owner and members, its columns, and only the rows whose index is at most
+the member's progress. Only members can view a chart, so only members see who else
+belongs to it.
 For each visible row, it includes the posts placed there with their column, author,
 quote, citation, analysis, upvote count, and whether the member has upvoted them,
 and each post's comments, oldest first. Posts in rows the member has not reached are
@@ -76,8 +79,9 @@ ThreadTracker.ExportChart at /charts/export
 ## Posting and commenting
 
 A member [posts an idea](reaction:ThreadTracker.CreatePost) in a cell after Charting
-confirms membership and that the cell is in the chart, and Progressing confirms the
-member has reached that row. The new post is then placed in the cell.
+confirms membership and that both the row and the column are in the chart, and
+Progressing confirms the member has reached that row. Only then is the post created
+and placed in the cell, so a refused request never leaves a post outside any cell.
 
 A member [comments on a post](reaction:ThreadTracker.CreateComment) after Charting
 locates the post's row and Progressing confirms the member has reached it. Comments

@@ -10,6 +10,7 @@
  *   checkMember  the caller belongs to the chart
  *   checkRow     the row is in the chart; returns its index (chapter number)
  *   checkCell    the row and column are in the chart; returns the row's index
+ *   checkOwner   the caller owns the chart
  *   checkItem    the post is placed in the chart; returns its row's index
  *   checkReached the caller's progress has reached that index
  *
@@ -75,7 +76,9 @@ const PostCard = former(
 );
 
 /**
- * The chart as one member sees it. Every row label is included, for the
+ * The chart as one member sees it, including who the other members are. Only
+ * members can request it, so a chart's members are never shown to outsiders.
+ * Every row label is included, for the
  * progress dropdown, but only posts in rows the member has reached are sent,
  * so unread chapters never reach the browser. Posts come in chapter order, then
  * oldest first within a chapter, which is also the export's order.
@@ -84,7 +87,7 @@ const ChartView = former(
   "the chart (chart) as seen by (user)",
   (
     { chart, user },
-    { title, owner, reached, row, label, index, unreadRow, unreadIndex, column, columnLabel, post, postRow, postIndex, postColumn },  ) =>
+    { title, owner, reached, member, row, label, index, unreadRow, unreadIndex, column, columnLabel, post, postRow, postIndex, postColumn },  ) =>
     where(
       Charting._get({ chart }).is({ title, owner }),
       Progressing._reached({ user, context: chart }).is({ reached }),
@@ -93,6 +96,7 @@ const ChartView = former(
       title,
       owner,
       reached,
+      members: each(Charting._members({ chart }).is({ member })).form({ member }),
       rows: each(Charting._rows({ chart }).is({ row, label, index }))
         .where(RowReached({ index, user, chart }))
         .form({ row, label, index }),
@@ -127,6 +131,8 @@ const CreateChart = endpoint(
 
 // Adding a member has two endpoints on one path: one for a registered username,
 // and one that answers UNKNOWN_USER. Exactly one of them matches each request.
+// Both refuse anyone but the owner first, so a non-owner can't use this path to
+// find out which usernames are registered.
 const AddMember = endpoint(
   "/charts/add-member",
   ({ session, user, chart, username }) =>
@@ -140,10 +146,11 @@ const AddMember = endpoint(
 
 const RejectUnknownMember = endpoint(
   "/charts/add-member",
-  ({ session, chart, username }) =>
+  ({ session, user, chart, username }) =>
     receive({ session, chart, username })
       .where(Authenticating._registered({ username }).is({ registered: false }))
-      .then(Sessioning.current({ session }).responds({}))
+      .then(Sessioning.current({ session }).responds({ subject: user }))
+      .then(Charting.checkOwner({ chart, owner: user }).responds({}))
       .then(respond({ error: "UNKNOWN_USER" })),
   // The input contract for this path is declared once, on AddMember.
 );
@@ -220,7 +227,7 @@ const CreatePost = endpoint(
     receive({ session, chart, row, column, quote, citation, analysis })
       .then(Sessioning.current({ session }).responds({ subject: user }))
       .then(Charting.checkMember({ chart, user }).responds({}))
-      .then(Charting.checkRow({ row, chart }).responds({ index }))
+      .then(Charting.checkCell({ chart, row, column }).responds({ index }))
       .then(Progressing.checkReached({ user, context: chart, step: index }).responds({}))
       .then(Posting.create({ author: user, quote, citation, analysis }).responds({ post }))
       .then(Charting.addItem({ item: post, chart, row, column, user }).responds({}))

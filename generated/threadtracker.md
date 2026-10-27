@@ -58,6 +58,11 @@ Defined in [Charting](../design/concepts/Charting.md), line 1.
   - Refuses `NOT_MEMBER`: You are not a member of this chart.
 - `checkRow(row: Row, chart: Chart) : returns (index: Number)`
   - Refuses `NOT_IN_CHART`: That chapter or literary element is not in this chart.
+- `checkCell(chart: Chart, row: Row, column: Column) : returns (index: Number)`
+  - Refuses `NOT_IN_CHART`: That chapter or literary element is not in this chart.
+- `checkOwner(chart: Chart, owner: User) : returns ()`
+  - Refuses `CHART_NOT_FOUND`: There is no such chart.
+  - Refuses `NOT_OWNER`: Only the owner of this chart can add members.
 - `checkItem(item: Item, chart: Chart) : returns (index: Number)`
   - Refuses `ITEM_NOT_FOUND`: That post is not in this chart.
 
@@ -65,6 +70,7 @@ Defined in [Charting](../design/concepts/Charting.md), line 1.
 
 - `_get(chart: Chart) : optional (title: String, owner: User)`
 - `_chartsFor(user: User) : many (chart: Chart, title: String, owner: User)`
+- `_members(chart: Chart) : many (member: User)`
 - `_rows(chart: Chart) : many (row: Row, label: String, index: Number)`
 - `_columns(chart: Chart) : many (column: Column, label: String)`
 - `_items(chart: Chart) : many (item: Item, row: Row, index: Number, column: Column)`
@@ -181,7 +187,7 @@ _Views name reusable conditions. Multiple `where` blocks are alternatives._
 ### row (index) is reached by (user) in (chart)
 
 Authored path: `ThreadTracker.RowReached`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 55.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 58.
 
 ```view
 row (index) is reached by (user) in (chart) — inputs (index, user, chart); outputs (); bindings (reached)
@@ -198,7 +204,7 @@ _the authored explanation; this section records the generated shape._
 ### (post) as seen by (user)
 
 Authored path: `ThreadTracker.PostCard`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 56.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 59.
 
 ```former
 Former "(post) as seen by (user)" — inputs (post, user); bindings (author, quote, citation, analysis, count, result, comment, commentAuthor, commentQuote, commentCitation, commentAnalysis); promises exactly one record — forms:
@@ -224,11 +230,11 @@ Former "(post) as seen by (user)" — inputs (post, user); bindings (author, quo
 ### the chart (chart) as seen by (user)
 
 Authored path: `ThreadTracker.ChartView`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 50.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 69.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 51.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 72.
 
 ```former
-Former "the chart (chart) as seen by (user)" — inputs (chart, user); bindings (title, owner, reached, row, label, index, unreadRow, unreadIndex, column, columnLabel, post, postRow, postIndex, postColumn); promises exactly one record — forms:
+Former "the chart (chart) as seen by (user)" — inputs (chart, user); bindings (title, owner, reached, member, row, label, index, unreadRow, unreadIndex, column, columnLabel, post, postRow, postIndex, postColumn); promises exactly one record — forms:
   a record of
     where Charting._get (chart) has (owner, title)
     where Progressing._reached (context: chart, user) has (reached)
@@ -237,6 +243,9 @@ Former "the chart (chart) as seen by (user)" — inputs (chart, user); bindings 
       form a record of
         column
         label: columnLabel
+    members: each Charting._members (chart) has (member)
+      form a record of
+        member
     owner
     posts: each Charting._items (chart) has (column: postColumn, index: postIndex, item: post, row: postRow)
       where view "row (index) is reached by (user) in (chart)" with (chart, index: postIndex, user)
@@ -264,7 +273,7 @@ Former "the chart (chart) as seen by (user)" — inputs (chart, user); bindings 
 ### the charts of (user)
 
 Authored path: `ThreadTracker.ChartList`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 24.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 25.
 
 ```former
 Former "the charts of (user)" — inputs (user); bindings (chart, title, owner); promises exactly one record — forms:
@@ -428,8 +437,8 @@ then
 ### ThreadTracker.AddColumn
 
 Authored path: `ThreadTracker.AddColumn`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 30.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 34.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 31.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 35.
 
 ```reaction
 when RequestBoundary.request (chart, label, path: "/charts/add-column", requestId, session)
@@ -440,8 +449,8 @@ then
 ### ThreadTracker.AddColumn#2
 
 Authored path: `ThreadTracker.AddColumn`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 30.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 34.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 31.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 35.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.AddColumn
@@ -454,8 +463,8 @@ then
 ### ThreadTracker.AddColumn#3
 
 Authored path: `ThreadTracker.AddColumn`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 30.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 34.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 31.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 35.
 
 ```reaction
 when Charting.addColumn (chart, label, user, column), asked by ThreadTracker.AddColumn#2
@@ -469,7 +478,7 @@ then
 
 Authored path: `ThreadTracker.AddMember`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 13.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 19.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 20.
 
 ```reaction
 when RequestBoundary.request (chart, path: "/charts/add-member", requestId, session, username)
@@ -483,7 +492,7 @@ then
 
 Authored path: `ThreadTracker.AddMember`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 13.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 19.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 20.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.AddMember
@@ -497,7 +506,7 @@ then
 
 Authored path: `ThreadTracker.AddMember`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 13.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 19.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 20.
 
 ```reaction
 when Charting.addMember (chart, owner: user, user: username), asked by ThreadTracker.AddMember#2
@@ -511,7 +520,7 @@ then
 
 Authored path: `ThreadTracker.CreateChart`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 10.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 18.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 19.
 
 ```reaction
 when RequestBoundary.request (columnLabels, path: "/charts/create", requestId, rowLabels, session, title)
@@ -523,7 +532,7 @@ then
 
 Authored path: `ThreadTracker.CreateChart`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 10.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 18.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 19.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.CreateChart
@@ -537,7 +546,7 @@ then
 
 Authored path: `ThreadTracker.CreateChart`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 10.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 18.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 19.
 
 ```reaction
 when Charting.createChart (columnLabels, owner: user, rowLabels, title, chart), asked by ThreadTracker.CreateChart#2
@@ -550,8 +559,8 @@ then
 ### ThreadTracker.CreateComment
 
 Authored path: `ThreadTracker.CreateComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 82.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 106.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 110.
 
 ```reaction
 when RequestBoundary.request (analysis, chart, citation, commentOn, path: "/posts/comment", quote, requestId, session)
@@ -562,8 +571,8 @@ then
 ### ThreadTracker.CreateComment#2
 
 Authored path: `ThreadTracker.CreateComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 82.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 106.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 110.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.CreateComment
@@ -576,8 +585,8 @@ then
 ### ThreadTracker.CreateComment#3
 
 Authored path: `ThreadTracker.CreateComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 82.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 106.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 110.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.CreateComment#2
@@ -590,8 +599,8 @@ then
 ### ThreadTracker.CreateComment#4
 
 Authored path: `ThreadTracker.CreateComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 82.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 106.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 110.
 
 ```reaction
 when Charting.checkItem (chart, item: commentOn, index), asked by ThreadTracker.CreateComment#3
@@ -604,8 +613,8 @@ then
 ### ThreadTracker.CreateComment#5
 
 Authored path: `ThreadTracker.CreateComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 82.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 106.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 110.
 
 ```reaction
 when Progressing.checkReached (context: chart, step: index, user), asked by ThreadTracker.CreateComment#4
@@ -619,8 +628,8 @@ then
 ### ThreadTracker.CreateComment#6
 
 Authored path: `ThreadTracker.CreateComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 82.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 106.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 110.
 
 ```reaction
 when Posting.comment (analysis, author: user, citation, commentOn, quote, post: comment), asked by ThreadTracker.CreateComment#5
@@ -633,8 +642,8 @@ then
 ### ThreadTracker.CreatePost
 
 Authored path: `ThreadTracker.CreatePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 78.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 105.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 81.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
 
 ```reaction
 when RequestBoundary.request (analysis, chart, citation, column, path: "/posts/create", quote, requestId, row, session)
@@ -645,8 +654,8 @@ then
 ### ThreadTracker.CreatePost#2
 
 Authored path: `ThreadTracker.CreatePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 78.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 105.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 81.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.CreatePost
@@ -659,25 +668,25 @@ then
 ### ThreadTracker.CreatePost#3
 
 Authored path: `ThreadTracker.CreatePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 78.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 105.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 81.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.CreatePost#2
 where
   earlier, RequestBoundary.request (analysis, chart, citation, column, path: "/posts/create", quote, requestId, row, session)
 then
-  Charting.checkRow (chart, row)
+  Charting.checkCell (chart, column, row)
 ```
 
 ### ThreadTracker.CreatePost#4
 
 Authored path: `ThreadTracker.CreatePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 78.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 105.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 81.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
 
 ```reaction
-when Charting.checkRow (chart, row, index), asked by ThreadTracker.CreatePost#3
+when Charting.checkCell (chart, column, row, index), asked by ThreadTracker.CreatePost#3
 where
   earlier, Sessioning.current (session, subject: user), asked by ThreadTracker.CreatePost
 then
@@ -687,8 +696,8 @@ then
 ### ThreadTracker.CreatePost#5
 
 Authored path: `ThreadTracker.CreatePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 78.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 105.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 81.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
 
 ```reaction
 when Progressing.checkReached (context: chart, step: index, user), asked by ThreadTracker.CreatePost#4
@@ -701,15 +710,14 @@ then
 ### ThreadTracker.CreatePost#6
 
 Authored path: `ThreadTracker.CreatePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 78.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 105.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 81.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
 
 ```reaction
 when Posting.create (analysis, author: user, citation, quote, post), asked by ThreadTracker.CreatePost#5
 where
   earlier, Charting.checkMember (chart, user), asked by ThreadTracker.CreatePost#2
-  earlier, Charting.checkRow (chart, row, index), asked by ThreadTracker.CreatePost#3
-  earlier, RequestBoundary.request (analysis, chart, citation, column, path: "/posts/create", quote, requestId, row, session)
+  earlier, Charting.checkCell (chart, column, row, index), asked by ThreadTracker.CreatePost#3
 then
   Charting.addItem (chart, column, item: post, row, user)
 ```
@@ -717,8 +725,8 @@ then
 ### ThreadTracker.CreatePost#7
 
 Authored path: `ThreadTracker.CreatePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 78.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 105.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 81.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
 
 ```reaction
 when Charting.addItem (chart, column, item: post, row, user), asked by ThreadTracker.CreatePost#6
@@ -731,8 +739,8 @@ then
 ### ThreadTracker.DeleteComment
 
 Authored path: `ThreadTracker.DeleteComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 100.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 104.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 113.
 
 ```reaction
 when RequestBoundary.request (chart, comment, path: "/posts/delete-comment", requestId, session)
@@ -743,8 +751,8 @@ then
 ### ThreadTracker.DeleteComment#2
 
 Authored path: `ThreadTracker.DeleteComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 100.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 104.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 113.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.DeleteComment
@@ -757,8 +765,8 @@ then
 ### ThreadTracker.DeleteComment#3
 
 Authored path: `ThreadTracker.DeleteComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 100.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 104.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 113.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.DeleteComment#2
@@ -771,8 +779,8 @@ then
 ### ThreadTracker.DeleteComment#4
 
 Authored path: `ThreadTracker.DeleteComment`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 100.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 109.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 104.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 113.
 
 ```reaction
 when Posting.delete (author: user, post: comment), asked by ThreadTracker.DeleteComment#3
@@ -785,8 +793,8 @@ then
 ### ThreadTracker.DeletePost
 
 Authored path: `ThreadTracker.DeletePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 108.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 94.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 112.
 
 ```reaction
 when RequestBoundary.request (chart, path: "/posts/delete", post, requestId, session)
@@ -797,8 +805,8 @@ then
 ### ThreadTracker.DeletePost#2
 
 Authored path: `ThreadTracker.DeletePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 108.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 94.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 112.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.DeletePost
@@ -811,8 +819,8 @@ then
 ### ThreadTracker.DeletePost#3
 
 Authored path: `ThreadTracker.DeletePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 108.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 94.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 112.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.DeletePost#2
@@ -825,8 +833,8 @@ then
 ### ThreadTracker.DeletePost#4
 
 Authored path: `ThreadTracker.DeletePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 108.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 94.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 112.
 
 ```reaction
 when Charting.checkItem (chart, item: post), asked by ThreadTracker.DeletePost#3
@@ -839,8 +847,8 @@ then
 ### ThreadTracker.DeletePost#5
 
 Authored path: `ThreadTracker.DeletePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 108.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 94.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 112.
 
 ```reaction
 when Posting.delete (author: user, post), asked by ThreadTracker.DeletePost#4
@@ -853,7 +861,7 @@ then
 ### ThreadTracker.DeletedPostLeavesChart
 
 Authored path: `ThreadTracker.DeletedPostLeavesChart`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 96.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 100.
 
 ```reaction
 when Posting.delete (post)
@@ -866,7 +874,7 @@ then
 ### ThreadTracker.DeletedPostLosesUpvotes
 
 Authored path: `ThreadTracker.DeletedPostLosesUpvotes`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 95.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 99.
 
 ```reaction
 when Posting.delete (post)
@@ -877,8 +885,8 @@ then
 ### ThreadTracker.EditPost
 
 Authored path: `ThreadTracker.EditPost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 107.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 111.
 
 ```reaction
 when RequestBoundary.request (analysis, chart, citation, path: "/posts/edit", post, quote, requestId, session)
@@ -889,8 +897,8 @@ then
 ### ThreadTracker.EditPost#2
 
 Authored path: `ThreadTracker.EditPost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 107.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 111.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.EditPost
@@ -903,8 +911,8 @@ then
 ### ThreadTracker.EditPost#3
 
 Authored path: `ThreadTracker.EditPost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 107.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 111.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.EditPost#2
@@ -917,8 +925,8 @@ then
 ### ThreadTracker.EditPost#4
 
 Authored path: `ThreadTracker.EditPost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 86.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 107.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 90.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 111.
 
 ```reaction
 when Posting.edit (analysis, author: user, citation, post, quote), asked by ThreadTracker.EditPost#3
@@ -931,8 +939,8 @@ then
 ### ThreadTracker.ExportChart
 
 Authored path: `ThreadTracker.ExportChart`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 68.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 73.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 71.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 76.
 
 ```reaction
 when RequestBoundary.request (chart, path: "/charts/export", requestId, session)
@@ -943,8 +951,8 @@ then
 ### ThreadTracker.ExportChart#2
 
 Authored path: `ThreadTracker.ExportChart`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 68.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 73.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 71.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 76.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.ExportChart
@@ -957,8 +965,8 @@ then
 ### ThreadTracker.ExportChart#3
 
 Authored path: `ThreadTracker.ExportChart`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 68.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 73.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 71.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 76.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.ExportChart#2
@@ -971,8 +979,8 @@ then
 ### ThreadTracker.ListCharts
 
 Authored path: `ThreadTracker.ListCharts`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 23.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 27.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 24.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 28.
 
 ```reaction
 when RequestBoundary.request (path: "/charts/list", requestId, session)
@@ -983,8 +991,8 @@ then
 ### ThreadTracker.ListCharts#2
 
 Authored path: `ThreadTracker.ListCharts`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 23.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 27.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 24.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 28.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.ListCharts
@@ -998,7 +1006,7 @@ then
 
 Authored path: `ThreadTracker.RejectUnknownMember`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 14.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 20.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 21.
 
 ```reaction
 when RequestBoundary.request (chart, path: "/charts/add-member", requestId, session, username)
@@ -1012,10 +1020,24 @@ then
 
 Authored path: `ThreadTracker.RejectUnknownMember`.
 - Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 14.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 20.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 21.
 
 ```reaction
-when Sessioning.current (session), asked by ThreadTracker.RejectUnknownMember
+when Sessioning.current (session, subject: user), asked by ThreadTracker.RejectUnknownMember
+where
+  earlier, RequestBoundary.request (chart, path: "/charts/add-member", requestId, session, username)
+then
+  Charting.checkOwner (chart, owner: user)
+```
+
+### ThreadTracker.RejectUnknownMember#3
+
+Authored path: `ThreadTracker.RejectUnknownMember`.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 14.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 21.
+
+```reaction
+when Charting.checkOwner (chart, owner: user), asked by ThreadTracker.RejectUnknownMember#2
 where
   earlier, RequestBoundary.request (chart, path: "/charts/add-member", requestId, session, username)
 then
@@ -1025,8 +1047,8 @@ then
 ### ThreadTracker.UnvotePost
 
 Authored path: `ThreadTracker.UnvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 124.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 122.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 128.
 
 ```reaction
 when RequestBoundary.request (chart, path: "/posts/unvote", post, requestId, session)
@@ -1037,8 +1059,8 @@ then
 ### ThreadTracker.UnvotePost#2
 
 Authored path: `ThreadTracker.UnvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 124.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 122.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 128.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.UnvotePost
@@ -1051,8 +1073,8 @@ then
 ### ThreadTracker.UnvotePost#3
 
 Authored path: `ThreadTracker.UnvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 124.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 122.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 128.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.UnvotePost#2
@@ -1065,8 +1087,8 @@ then
 ### ThreadTracker.UnvotePost#4
 
 Authored path: `ThreadTracker.UnvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 124.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 122.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 128.
 
 ```reaction
 when Charting.checkItem (chart, item: post), asked by ThreadTracker.UnvotePost#3
@@ -1079,8 +1101,8 @@ then
 ### ThreadTracker.UnvotePost#5
 
 Authored path: `ThreadTracker.UnvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 124.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 122.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 128.
 
 ```reaction
 when Upvoting.unvote (item: post, voter: user), asked by ThreadTracker.UnvotePost#4
@@ -1093,8 +1115,8 @@ then
 ### ThreadTracker.UpdateProgress
 
 Authored path: `ThreadTracker.UpdateProgress`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 39.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 44.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 40.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 45.
 
 ```reaction
 when RequestBoundary.request (chart, path: "/charts/progress", requestId, row, session)
@@ -1105,8 +1127,8 @@ then
 ### ThreadTracker.UpdateProgress#2
 
 Authored path: `ThreadTracker.UpdateProgress`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 39.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 44.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 40.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 45.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.UpdateProgress
@@ -1119,8 +1141,8 @@ then
 ### ThreadTracker.UpdateProgress#3
 
 Authored path: `ThreadTracker.UpdateProgress`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 39.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 44.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 40.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 45.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.UpdateProgress#2
@@ -1133,8 +1155,8 @@ then
 ### ThreadTracker.UpdateProgress#4
 
 Authored path: `ThreadTracker.UpdateProgress`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 39.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 44.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 40.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 45.
 
 ```reaction
 when Charting.checkRow (chart, row, index), asked by ThreadTracker.UpdateProgress#3
@@ -1147,8 +1169,8 @@ then
 ### ThreadTracker.UpdateProgress#5
 
 Authored path: `ThreadTracker.UpdateProgress`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 39.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 44.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 40.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 45.
 
 ```reaction
 when Progressing.setProgress (context: chart, reached: index, user), asked by ThreadTracker.UpdateProgress#4
@@ -1161,8 +1183,8 @@ then
 ### ThreadTracker.UpvotePost
 
 Authored path: `ThreadTracker.UpvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 114.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 123.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 127.
 
 ```reaction
 when RequestBoundary.request (chart, path: "/posts/upvote", post, requestId, session)
@@ -1173,8 +1195,8 @@ then
 ### ThreadTracker.UpvotePost#2
 
 Authored path: `ThreadTracker.UpvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 114.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 123.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 127.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.UpvotePost
@@ -1187,8 +1209,8 @@ then
 ### ThreadTracker.UpvotePost#3
 
 Authored path: `ThreadTracker.UpvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 114.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 123.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 127.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.UpvotePost#2
@@ -1201,8 +1223,8 @@ then
 ### ThreadTracker.UpvotePost#4
 
 Authored path: `ThreadTracker.UpvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 114.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 123.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 127.
 
 ```reaction
 when Charting.checkItem (chart, item: post, index), asked by ThreadTracker.UpvotePost#3
@@ -1215,8 +1237,8 @@ then
 ### ThreadTracker.UpvotePost#5
 
 Authored path: `ThreadTracker.UpvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 114.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 123.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 127.
 
 ```reaction
 when Progressing.checkReached (context: chart, step: index, user), asked by ThreadTracker.UpvotePost#4
@@ -1229,8 +1251,8 @@ then
 ### ThreadTracker.UpvotePost#6
 
 Authored path: `ThreadTracker.UpvotePost`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 114.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 123.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 118.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 127.
 
 ```reaction
 when Upvoting.upvote (item: post, voter: user), asked by ThreadTracker.UpvotePost#5
@@ -1243,8 +1265,8 @@ then
 ### ThreadTracker.ViewChart
 
 Authored path: `ThreadTracker.ViewChart`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 49.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 63.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 50.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 66.
 
 ```reaction
 when RequestBoundary.request (chart, path: "/charts/view", requestId, session)
@@ -1255,8 +1277,8 @@ then
 ### ThreadTracker.ViewChart#2
 
 Authored path: `ThreadTracker.ViewChart`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 49.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 63.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 50.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 66.
 
 ```reaction
 when Sessioning.current (session, subject: user), asked by ThreadTracker.ViewChart
@@ -1269,8 +1291,8 @@ then
 ### ThreadTracker.ViewChart#3
 
 Authored path: `ThreadTracker.ViewChart`.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 49.
-- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 63.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 50.
+- Covered by [ThreadTracker](../design/compositions/ThreadTracker.md), line 66.
 
 ```reaction
 when Charting.checkMember (chart, user), asked by ThreadTracker.ViewChart#2

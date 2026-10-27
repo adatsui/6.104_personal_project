@@ -124,6 +124,13 @@ describe("Charting", () => {
     await expect(charting.deleteItem({ item: "missing", chart })).rejects.toThrow(ItemNotFound);
   });
 
+  test("_members lists the owner and every added member, alphabetically", async () => {
+    const { chart } = await edenChart();
+    await charting.addMember({ chart, owner: "teacher", user: "cal" });
+    expect(await charting._members({ chart })).toEqual([{ member: "cal" }, { member: "millie" }, { member: "teacher" }]);
+    expect(await charting._members({ chart: "missing" })).toEqual([]);
+  });
+
   test("checkMember passes members and refuses everyone else", async () => {
     const { chart } = await edenChart();
     expect(await charting.checkMember({ chart, user: "millie" })).toEqual({});
@@ -136,6 +143,21 @@ describe("Charting", () => {
     const other = await edenChart();
     expect(await charting.checkRow({ row: ch2, chart })).toEqual({ index: 2 });
     await expect(charting.checkRow({ row: other.ch2, chart })).rejects.toThrow(NotInChart);
+  });
+
+  test("checkCell returns the row's index only when both the row and the column are in this chart", async () => {
+    const { chart, ch2, freeWill } = await edenChart();
+    const other = await edenChart();
+    expect(await charting.checkCell({ chart, row: ch2, column: freeWill })).toEqual({ index: 2 });
+    await expect(charting.checkCell({ chart, row: ch2, column: other.freeWill })).rejects.toThrow(NotInChart);
+    await expect(charting.checkCell({ chart, row: other.ch2, column: freeWill })).rejects.toThrow(NotInChart);
+  });
+
+  test("checkOwner passes the owner and refuses members and unknown charts", async () => {
+    const { chart } = await edenChart();
+    expect(await charting.checkOwner({ chart, owner: "teacher" })).toEqual({});
+    await expect(charting.checkOwner({ chart, owner: "millie" })).rejects.toThrow(NotOwner);
+    await expect(charting.checkOwner({ chart: "missing", owner: "teacher" })).rejects.toThrow(ChartNotFound);
   });
 
   test("checkItem returns the index of the item's row, only for this chart", async () => {
